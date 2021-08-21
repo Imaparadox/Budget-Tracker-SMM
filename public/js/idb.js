@@ -16,10 +16,15 @@ request.onsuccess = function (event) {
 
     db.onerror = function (event) {
         console.log('Error creating/accessing IndexedDB database');
-        if (navigator.online) {
-            //function checkDB
+        if (navigator.onLine) {
+            checkDB();
         }
     };
+};
+
+request.onerror = function (event) {
+    // log error here
+    console.log(event.target.errorCode);
 };
 
 function saveRecord(record) {
