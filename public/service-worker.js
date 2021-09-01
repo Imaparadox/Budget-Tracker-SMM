@@ -1,14 +1,12 @@
-const APP_PREFIX = 'BudgetTracker-';
-const VERSION = 'version_01';
-const CACHE_NAME = APP_PREFIX + VERSION;
+const CACHE_NAME = 'My-Site-Cache-v1';
 const FILES_TO_CACHE = [
     "/",
-    "./idb.js",
-    "./index.js",
-    "./css/styles.css",
-    "./manifest.json",
-    "./icons/icon-192x192.png",
-    "./icons/icon-384x384.png"
+    "/idb.js",
+    "/index.js",
+    "/css/styles.css",
+    "/manifest.json",
+    "/icons/icon-192x192.png",
+    "/icons/icon-384x384.png"
 ];
 
 // Respond with cached resources
@@ -35,23 +33,55 @@ self.addEventListener('install', function (e) {
             return cache.addAll(FILES_TO_CACHE)
         })
     )
-})
-
-self.addEventListener('activate', function (e) {
-    e.waitUntil(
-        caches.keys().then(function (keyList) {
-            let cacheKeepList = keyListfilter(function (key) {
-                return key.indexOf(APP_PREFIX);
-            });
-            cacheKeepList.push(CACHE_NAME);
-            return Promise.all(
-                keyList.map(function (key, i) {
-                    if (cacheKeepList.indexOf(key) === -1) {
-                        console.log('deleting cache : ' + keyList[i]);
-                        return caches.delete(keyList[i]);
-                    }
-                })
-            );
-        })
-    );
 });
+
+self.addEventListener('fetch', function (e) {
+    if (e.request.url.includes('/api/')) {
+        e.respondWith(
+            caches.open(CACHE_NAME).then(cache => {
+                return fetch(e.request)
+                    .then(response => {
+                        if (response.status === 200) {
+                            cache.put(e.request.url, response.clone());
+                        }
+                        return response;
+                    })
+                    .catch(err => {
+                        return cache.match(e.request);
+                    });
+            }).catch(err => console.log(err))
+        );
+        return;
+    }
+    //Respond with return cached home page
+    e.respondWith(
+        fetch(e.request).catch(function () {
+            return caches.match(e.request).then(function (response) {
+                if (response) {
+                    return response;
+                } else if (e.request.headers.get('accept').includes('text/html')) {
+                    return caches.match('/');
+                }
+            })
+        })
+    )
+});
+
+// self.addEventListener('activate', function (e) {
+//     e.waitUntil(
+//         caches.keys().then(function (keyList) {
+//             let cacheKeepList = keyListfilter(function (key) {
+//                 return key.indexOf(APP_PREFIX);
+//             });
+//             cacheKeepList.push(CACHE_NAME);
+//             return Promise.all(
+//                 keyList.map(function (key, i) {
+//                     if (cacheKeepList.indexOf(key) === -1) {
+//                         console.log('deleting cache : ' + keyList[i]);
+//                         return caches.delete(keyList[i]);
+//                     }
+//                 })
+//             );
+//         })
+//     );
+// });
