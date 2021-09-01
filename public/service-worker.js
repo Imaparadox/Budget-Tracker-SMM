@@ -1,8 +1,8 @@
 const CACHE_NAME = 'My-Site-Cache-v1';
 const FILES_TO_CACHE = [
     "/",
-    "/idb.js",
-    "/index.js",
+    "/js/idb.js",
+    "/js/index.js",
     "/css/styles.css",
     "/manifest.json",
     "/icons/icon-192x192.png",
