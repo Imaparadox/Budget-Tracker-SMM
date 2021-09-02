@@ -14,16 +14,14 @@ THEN the deposits or expenses added while they were offline are added to their t
 
 ## Table of Contents 
 
-* [Deploy](#deploy)
 * [Technologies Used](#technologies-used)
+* [Deploy](#deploy)
 * [Usage](#usage)
 * [Notes](#notes)
 * [Contributions](#contributions)
 * [Licenses](#licenses)
 
-## Deploy
 
-de
 ## Technologies Used
 
 * JavaScript
@@ -32,11 +30,19 @@ de
 * Mongoose
 * MongoDB
 
+## Deploy
+
+[Heroku Link](https://desolate-mountain-30570.herokuapp.com/)
+
 ## Usage 
+
+### Landing Page:
+
+![Screenshot](public/images/BudgetTrackerLanding.png)
 
 
 ## Notes
-
+Getting offline functionality to work was extremely difficult. I didn't realize that I needed to unregister the service worker if I was having issues with the offline functionality. 
 
 ## Contributions
 N/A
